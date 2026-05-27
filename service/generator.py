@@ -1,5 +1,11 @@
 import random
 import os
+import sys
+
+from core.colors import color
+
+from core.password_manager import encode_passwd
+
 
 from core.password_manager import save_passwd
 
@@ -54,9 +60,18 @@ def main():
 
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    save_passwd(file_path, f"{service}: {password}")
+    save_passwd(file_path, f"{service}: {encode_passwd(password)}")
 
     print("\nSaved to shadow/passwd.txt")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+
+    except KeyboardInterrupt:
+        print(color.BOLD + color.RED + "\nOperation cancelled by user." + color.END)
+        sys.exit(0)
+
+    except Exception as e:
+        print(color.BOLD + color.RED + f"Fatal error: {e}" + color.END)
+        sys.exit(1)
